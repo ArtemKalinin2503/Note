@@ -5,10 +5,19 @@ import store from '../store';
 import {getData} from '../reducers'; //импортируем actions
 
 class AddNoteComponent extends Component {
-    //Компонент componentDidMount сработает сразу после загрузки
+
     componentDidMount() {
  
-    }
+    };
+
+    //Событие клика по кнопке Добавить заметку
+    handleClick(e) {
+        e.preventDefault();
+        let inpTitleValue = this.refs.inputTitleNote.value;
+        let inpDescriptionValue = this.refs.inputDescriptionNote.value;
+        console.log(inpTitleValue);
+        console.log(inpDescriptionValue);
+    };
 
     render() {
         return (
@@ -16,13 +25,13 @@ class AddNoteComponent extends Component {
                 <form className="note__form">
                     <label>
                         <p>Название заметки</p>
-                        <input type="text" className="note__title"/>
+                        <input type="text" className="note__title" ref="inputTitleNote"/>
                     </label>
                     <label>
                         <p>Описание заметки</p>
-                        <textarea className="note__description"></textarea>
+                        <textarea className="note__description" ref="inputDescriptionNote"></textarea>
                     </label>
-                    <button className="note__add-button">Добавить заметку</button>
+                    <button className="note__add-button" onClick={this.handleClick.bind(this)}>Добавить заметку</button>
                 </form>
             </div>
         )
