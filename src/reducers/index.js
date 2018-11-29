@@ -14,9 +14,6 @@ export const fetchError = (error)=>{return {type: "Get_Error", payload: error}};
 
 //Создадим состояния с помощью метода initState (в каждое состояние передан тип данных которое мы ожидаем записать в каждое состояние)
 export const initState = {
-    id: 0,
-    title: '',
-    description: '',
     //Состояние для сетевого запроса
     requestSending:false,
     requestSuccess: null,
@@ -76,16 +73,21 @@ const mainReducer = (state = initState, action) => {
 
 //Thunk компонент postData для Post запроса 
 export const postData = (post) => {
-    return (dispatch) => {
-        dispatch(actionStartPost(true));
-        axios.post("http://localhost:3000/posts", post)
-        .then(result => {
-            if (result.status === 200) {
-                dispatch(actionEndPost(true));
-            } else {
-                dispatch(actionEndPost(false));
-            }
-        })
+    return (dispatch, getState) => {
+        if(post && post.title && post.description) {
+            dispatch(actionStartPost(true));
+            axios.post("http://localhost:3012/notes", post)
+                .then(result => {
+                if (result.status === 200) {
+                    dispatch(actionEndPost(true));
+                    let arr = (getState()).mainReducer.fetchResult;
+                    arr.push(result.data);
+                    dispatch(fetchResult(arr));
+                } else {
+                    dispatch(actionEndPost(false));
+                }
+            })
+        }
     }
 }
 
@@ -94,9 +96,9 @@ export const getData = () => {
     return (dispatch) => {
         dispatch(fetchStarted(true));
         var api = axios.create({
-            baseURL: 'http://localhost:3000/'
+            baseURL: 'http://localhost:3012'
         })
-        api.get("posts")
+        api.get("/notes")
         .then(result => {
             dispatch(fetchResult(result.data));
         },

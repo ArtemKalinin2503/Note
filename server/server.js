@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 //Подключим express
 var express = require('express');
+var cors = require('cors');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
@@ -24,7 +25,7 @@ const Note = mongoose.model('Note', NoteSchema);
 const Notes = mongoose.model('Note');
 
 //Создадим подключение к БД (notes - имя БД)
-export function setUpConnection() {
+function setUpConnection() {
     mongoose.connect('mongodb://localhost/notes', {useNewUrlParser:true}, function (err) {
         if (err) throw err;
         console.log ('Successfully connected!!!');
@@ -32,12 +33,12 @@ export function setUpConnection() {
 };
 
 //Создадим запрос к БД (метод find выведит все данные из БД)
-export function listNotes() {
+function listNotes() {
     return Notes.find();
 };
 
 //Создадим запрос который будет создавать новую заметку
-export function createNote(data) {
+function createNote(data) {
     const note = new Notes({
         title: data.title,
         description: data.description
@@ -46,18 +47,18 @@ export function createNote(data) {
 };
 
 //Создадим запрос который будет удалять записи из БД
-export function deleteNote(id) {
+function deleteNote(id) {
     return Notes.findById(id).remove();
 };
 
-//Вызов сервера express
+// //Вызов сервера express
 var app = express();
-
+app.use(cors());
 //Переменная для работы с БД
 var db;
 
 //Установим соединение с БД
-db.setUpConnection();
+setUpConnection();
 
 //Преобразуем данные из БД в Json
 app.use(bodyParser.json());
@@ -66,21 +67,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Метод post будет создавать записи в БД
 app.post('/notes', (req, res) => {
     //Вызовим запрос createNote
-    db.createNote(req, body).then(data => res.send(data));
-    //Создадим новую запись в БД
-    db.createNote({ title: 'New note', description: 'Description note' })
+    createNote(req.body).then(data => res.send(data));
+    
 });
 
 //Метод get будет вывводить данные из БД
 app.get('/notes', (req, res) => {
     //Вызовим запрос listNotes
-    db.listNotes().then(data => res.send(data));
+    listNotes().then(data => res.send(data));
 });
 
 //Метод delete будет удалять данные из БД
 app.delete('/notes/:id', (req, res) => {
     //Вызовим звпрос deleteNote
-    db.deleteNote(req.params.id).then(data => res.send(data));
+    deleteNote(req.params.id).then(data => res.send(data));
 });
 
 //Подключим mongodb где notes - это имя БД
@@ -93,12 +93,12 @@ MongoClient.connect('mongodb://localhost:27017', function (err, client) {
     app.listen(3012, function() {
         console.log('Api app started')
     });
-})
+});
 
 
 {/*Код от нативного метода работы с MongoDB без использования mongoose*/}
 
-// //Создадим post запрос - который создаст коллекцию (в данном случае Заметок) (в Postam выбираем post и создаем новые заметки например "title": "Note Title", "description":"new description")
+//Создадим post запрос - который создаст коллекцию (в данном случае Заметок) (в Postam выбираем post и создаем новые заметки например "title": "Note Title", "description":"new description")
 // app.post('/notes', function (req, res) {
 //     //Опишем данные (опишем как должна выглядит новая заметка)
 //     var newnote = {
@@ -167,7 +167,7 @@ MongoClient.connect('mongodb://localhost:27017', function (err, client) {
 //     )
 // });
 
-// //Подключим mongodb где myNotes - это имя нашей базы данных 
+//Подключим mongodb где myNotes - это имя нашей базы данных 
 // MongoClient.connect('mongodb://localhost:27017', function (err, client) {
 //     if (err) {
 //         return console.log(err);

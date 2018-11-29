@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom'; //Для роутинга
 import { connect } from 'react-redux'; //connect нужен для связи компонента со store
 import store from '../store';
-import {getData} from '../reducers'; //импортируем actions
+import {getData, postData} from '../reducers'; //импортируем actions
 
 class AddNoteComponent extends Component {
-
     componentDidMount() {
- 
+       this.props.get();
     };
 
     //Событие клика по кнопке Добавить заметку
@@ -15,11 +14,13 @@ class AddNoteComponent extends Component {
         e.preventDefault();
         let inpTitleValue = this.refs.inputTitleNote.value;
         let inpDescriptionValue = this.refs.inputDescriptionNote.value;
-        console.log(inpTitleValue);
-        console.log(inpDescriptionValue);
+        this.props.post({
+            title: inpTitleValue,
+            description: inpDescriptionValue
+        });
     };
 
-    render() {
+    render() { 
         return (
             <div className="wrapper-note__component">
                 <form className="note__form">
@@ -33,23 +34,28 @@ class AddNoteComponent extends Component {
                     </label>
                     <button className="note__add-button" onClick={this.handleClick.bind(this)}>Добавить заметку</button>
                 </form>
+                {this.props.apiData.map((el,i) =>
+                    <div key={i}>
+                        <p>{el.title}:</p> 
+                        <p>{el.description}</p>
+                    </div>
+                )}
             </div>
-        )
+        ) 
+        
     }
 };
 
 //Для связи со store
 const mapStateToProps = (state,ownProps={}) => ({
-    id: state.mainReducer.id,
-    title: state.mainReducer.title,
-    description: state.mainReducer.description,
     apiData: state.mainReducer.fetchResult,
     apiFetching: state.mainReducer.isFetching
 });
 
 //Передаем thunk компонент
 const mapDispatchToProps = {
-    fetchData: getData
+    get: getData,
+    post: postData
 }
 
 //Обвернем данный компонент в connect для свзяи с хранилищем
