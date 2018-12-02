@@ -30,5 +30,5 @@ React + Redux + Express server + MongoDB + Mongoose
  - Компонент AddNoteComponent который осуществляет рендер всей разметки сайта:
    - В компоненте componentDidMount вызовим наш thunk getData (который мы записали в свойство get,  в mapDispatchToProps)
    - В событие handleClick (которое отработает при нажатие кнопки 'Добавить заметку') получим значение value из input (название заметки и содержание заметки), ипользую refs чтобы прокинуть контекст (this)
-   - Вызовим наш thuck postData (который также переадли в свойство post - описанное в mapDispatchToProps) 
+   - Вызовим наш thuck postData (который также передали в свойство post - описанное в mapDispatchToProps) 
      - При вызове данного thunk обратимся к свойствам: title и description и переадим в них значения наших input ( так образом мы запишем данные в БД)  
