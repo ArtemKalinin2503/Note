@@ -31,7 +31,7 @@ const mainReducer = (state = initState, action) => {
             return {
                 ...state,
                 requestSucceed: action.payload
-            }
+            };
         case "Is_Fetched":
             return {
                 ...state,
@@ -89,6 +89,8 @@ export const getData = () => {
         });
     }
 }
+
+//Thunk компонент getPut для изменения записей в БД
 
 //Передаим созданный редьюсер mainReducer в расширение combineReducers
 const todoApp = combineReducers ({

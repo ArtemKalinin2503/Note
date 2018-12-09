@@ -36,7 +36,7 @@ const Note = mongoose.model('Note', NoteSchema);
 //Передадим модель
 const Notes = mongoose.model('Note');
 
-//Создадим подключение к БД (notes - имя БД)
+//Подключение к БД (notes - имя БД)
 function setUpConnection() {
     mongoose.connect('mongodb://localhost/notes', {useNewUrlParser:true}, function (err) {
         if (err) throw err;
@@ -46,12 +46,12 @@ function setUpConnection() {
 
 {/*--Опишем методы для работы с БД--*/}
 
-//Создадим метод к БД (метод find выведит все данные из БД)
+//Метод к БД (метод find выведит все данные из БД)
 function listNotes() {
     return Notes.find();
 };
 
-//Создадим метод который будет создавать новую заметку (именно в данные состояния title и description будут приходить данные)
+//Метод который будет создавать новую заметку (именно в данные состояния title и description будут приходить данные)
 function createNote(data) {
     const note = new Notes({
         title: data.title,
@@ -60,32 +60,58 @@ function createNote(data) {
     return note.save();
 };
 
-//Создадим метод который будет удалять записи из БД
+//Метод который будет находить запись в бд исходя из пераднного id
+function getNote(id, callback) {
+    return Notes.findById(id).exec(callback);
+};
+
+//Метод который будет обновлять данные в БД (исходя из переданного id записи)
+function updateNote(id, data, callback) {
+    return Notes.findByIdAndUpdate({'_id' : id}, data, {}, callback);
+}
+
+//Метод который будет удалять записи из БД
 function deleteNote(id) {
     return Notes.findById(id).remove();
 };
 
-{/*--Опишем основные запросы к БД--*/}
+{/*--Основные запросы к БД--*/}
 
-//Метод post будет создавать записи в БД
+//Запрос post будет создавать записи в БД
 app.post('/notes', (req, res) => {
     //Вызовим запрос createNote
     createNote(req.body).then(data => res.send(data));  
 });
 
-//Метод get будет вывводить данные из БД
+//Запрос get будет выводить данные из БД
 app.get('/notes', (req, res) => {
     //Вызовим запрос listNotes
     listNotes().then(data => res.send(data));
 });
 
-//Метод delete будет удалять данные из БД
+//Запрос put будет изменять записи в БД
+app.put('/notes/:id', function(req, res){
+    console.log(req.params)
+    getNote(req.params.id, (err, data) => {
+        if(data && data._id) {  
+            console.log('update')
+            updateNote(data.id, {$set: req.body}, (err, result) => {
+                res.send(result);
+            });
+        } else {
+            console.log('create')
+            createNote(data).then(data => res.send(data));
+        }
+    })
+});
+
+//Запрос delete будет удалять данные из БД
 app.delete('/notes/:id', (req, res) => {
     //Вызовим звпрос deleteNote
     deleteNote(req.params.id).then(data => res.send(data));
 });
 
-//Подключим mongodb где notes - это имя БД
+//Подключение mongodb где notes - это имя БД
 MongoClient.connect('mongodb://localhost:27017', function (err, client) {
     if (err) {
         return console.log(err);
