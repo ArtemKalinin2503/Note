@@ -60,7 +60,7 @@ function createNote(data) {
     return note.save();
 };
 
-//Метод который будет находить запись в бд исходя из пераднного id
+//Метод который будет находить запись в бд исходя из пераданного id
 function getNote(id, callback) {
     return Notes.findById(id).exec(callback);
 };
@@ -77,35 +77,32 @@ function deleteNote(id) {
 
 {/*--Основные запросы к БД--*/}
 
-//Запрос post будет создавать записи в БД
+//Запрос Post будет создавать записи в БД
 app.post('/notes', (req, res) => {
     //Вызовим запрос createNote
     createNote(req.body).then(data => res.send(data));  
 });
 
-//Запрос get будет выводить данные из БД
+//Запрос Get будет выводить данные из БД
 app.get('/notes', (req, res) => {
     //Вызовим запрос listNotes
     listNotes().then(data => res.send(data));
 });
 
-//Запрос put будет изменять записи в БД
+//Запрос Put будет изменять записи в БД
 app.put('/notes/:id', function(req, res){
-    console.log(req.params)
     getNote(req.params.id, (err, data) => {
         if(data && data._id) {  
-            console.log('update')
             updateNote(data.id, {$set: req.body}, (err, result) => {
                 res.send(result);
             });
         } else {
-            console.log('create')
             createNote(data).then(data => res.send(data));
         }
     })
 });
 
-//Запрос delete будет удалять данные из БД
+//Запрос Delete будет удалять данные из БД
 app.delete('/notes/:id', (req, res) => {
     //Вызовим звпрос deleteNote
     deleteNote(req.params.id).then(data => res.send(data));

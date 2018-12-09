@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 import axios from 'axios'; //Axios вместо fetch для сетевого запроса
+//Actions для put запроса
+export const actionUpdateNote = (update)=>{return {type: "Request_Update", payload: update}};
 //Actions для post запроса
 export const actionStartPost = (isRequestSent)=>{return {type: "Request_Sending", payload: isRequestSent}};
 export const actionEndPost = (postResult)=>{return {type:"Request_Result", payload: postResult}};
@@ -42,6 +44,11 @@ const mainReducer = (state = initState, action) => {
                 ...state,
                 fetchResult: action.payload
             };
+        case "Request_Update":
+            return {
+                ...state,
+                fetchResult: action.payload 
+            };    
         case "Get_Error": 
             return {
                 ...state,
@@ -80,7 +87,7 @@ export const getData = () => {
         var api = axios.create({
             baseURL: 'http://localhost:3012' //адрес по которому доступна БД
         })
-        api.get("/notes") //'/notes' - имя БД к которой обращаемся 
+        api.get("/notes") //'notes' - имя БД к которой обращаемся 
         .then(result => {
             dispatch(fetchResult(result.data));
         },
@@ -91,6 +98,14 @@ export const getData = () => {
 }
 
 //Thunk компонент getPut для изменения записей в БД
+export const getPut = (id, item) => {
+    return (dispatch) => {
+        console.log(item)
+        return axios.put(`/notes/${id}`, item).then(response => {
+            console.log(response)
+        })
+    }
+}
 
 //Передаим созданный редьюсер mainReducer в расширение combineReducers
 const todoApp = combineReducers ({

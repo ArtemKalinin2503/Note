@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom'; //Для роутинга
 import { connect } from 'react-redux'; //connect нужен для связи компонента со store
 import store from '../store';
-import {getData, postData} from '../reducers'; //импортируем actions
+import {getData, postData, getPut} from '../reducers'; //импортируем actions
 
 class AddNoteComponent extends Component {
     
@@ -11,7 +11,7 @@ class AddNoteComponent extends Component {
        this.props.get(); //Вызовим thunk getData (передали в mapDispatchToProps) данный компонент просто выведит все значения из БД
     };
 
-    //Событие клика по кнопке Добавить заметку
+    //Кнопка Добавить заметку
     handleClick(e) {
         e.preventDefault();
         let inpTitleValue = this.refs.inputTitleNote.value;
@@ -23,6 +23,11 @@ class AddNoteComponent extends Component {
             description: inpDescriptionValue
         });
     };
+
+    //Кнопка изменить запись
+    handleUpdateNote() {
+        this.props.put();
+    }
 
     render() { 
         return (
@@ -43,6 +48,7 @@ class AddNoteComponent extends Component {
                     <div key={i}>
                         <p>{el.title}:</p> 
                         <p>{el.description}</p>
+                        <button onClick={this.handleUpdateNote}>Изменить</button>
                     </div>
                 )}
             </div>
@@ -60,7 +66,8 @@ const mapStateToProps = (state,ownProps={}) => ({
 //Передаем thunk компонент
 const mapDispatchToProps = {
     post: postData, //thunk postData - для записи данных в БД
-    get: getData //thunk getData - для получения данный из БД
+    get: getData, //thunk getData - для получения данных из БД
+    put: getPut //thunk getPut - для изменения данных из БД
 }
 
 //Обвернем данный компонент в connect для свзяи с хранилищем
