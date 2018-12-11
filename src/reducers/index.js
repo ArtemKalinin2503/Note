@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 import axios from 'axios'; //Axios вместо fetch для сетевого запроса
 //Actions для put запроса
-export const actionUpdateNote = (update)=>{return {type: "Request_Update", payload: update}};
+export const actionUpdateNote = (updateItem)=>{return {type: "Request_Update", payload: updateItem}};
+export const actionIsUpdating= (isUpdating)=>{return {type: "Request_Updating", payload: isUpdating}};
 //Actions для post запроса
 export const actionStartPost = (isRequestSent)=>{return {type: "Request_Sending", payload: isRequestSent}};
 export const actionEndPost = (postResult)=>{return {type:"Request_Result", payload: postResult}};
@@ -17,7 +18,9 @@ export const initState = {
     requestSuccess: null,
     isFetching: false,
     fetchResult: [],
-    fetchError: null    
+    fetchError: null,
+    updateResult: {},
+    isUpdate: false    
 };
 
 //Создадим редьюсер в котором опишем, что должен делать каждый action
@@ -47,7 +50,12 @@ const mainReducer = (state = initState, action) => {
         case "Request_Update":
             return {
                 ...state,
-                fetchResult: action.payload 
+                updateResult: action.payload 
+            };
+        case "Request_Updating":
+            return {
+                ...state,
+                isUpdating: action.payload
             };    
         case "Get_Error": 
             return {
@@ -100,10 +108,15 @@ export const getData = () => {
 //Thunk компонент getPut для изменения записей в БД
 export const getPut = (id, item) => {
     return (dispatch) => {
-        console.log(item)
-        return axios.put(`/notes/${id}`, item).then(response => {
-            console.log(response)
-        })
+        dispatch(actionIsUpdating(true));
+        var api = axios.create({
+            baseURL: 'http://localhost:3012' //адрес по которому доступна БД
+        });
+        return api.put(`/notes/${id}`, item).then(response => {
+            console.log(response);
+            dispatch(actionUpdateNote(item));
+            dispatch(actionIsUpdating(false));
+        }, err=> (dispatch(actionIsUpdating(false))));
     }
 }
 

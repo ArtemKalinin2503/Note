@@ -3,8 +3,9 @@ import {Link} from 'react-router-dom'; //Для роутинга
 import { connect } from 'react-redux'; //connect нужен для связи компонента со store
 import store from '../store';
 import {getData, postData, getPut} from '../reducers'; //импортируем actions
-
+import NoteElementComponent from "./NoteElementComponent";
 class AddNoteComponent extends Component {
+    
     
     //Отработвает при загрузке страницы
     componentDidMount() {
@@ -25,8 +26,9 @@ class AddNoteComponent extends Component {
     };
 
     //Кнопка изменить запись
-    handleUpdateNote() {
-        this.props.put();
+    handleUpdateNote(id, item) {
+        debugger;
+        this.props.put(id, item);
     }
 
     render() { 
@@ -45,11 +47,7 @@ class AddNoteComponent extends Component {
                 </form>
                 {/*С помощью цикла map выведим все данные из БД где title и description  имя свойств*/}
                 {this.props.apiData.map((el,i) =>
-                    <div key={i}>
-                        <p>{el.title}:</p> 
-                        <p>{el.description}</p>
-                        <button onClick={this.handleUpdateNote}>Изменить</button>
-                    </div>
+                    <NoteElementComponent key={i} el={el} handleUpdateNote={this.handleUpdateNote.bind(this)}/>
                 )}
             </div>
         ) 
