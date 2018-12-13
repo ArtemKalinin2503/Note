@@ -113,7 +113,6 @@ export const getPut = (id, item) => {
             baseURL: 'http://localhost:3012' //адрес по которому доступна БД
         });
         return api.put(`/notes/${id}`, item).then(response => {
-            console.log(response);
             dispatch(actionUpdateNote(item));
             dispatch(actionIsUpdating(false));
         }, err=> (dispatch(actionIsUpdating(false))));

@@ -3,9 +3,8 @@ import {Link} from 'react-router-dom'; //Для роутинга
 import { connect } from 'react-redux'; //connect нужен для связи компонента со store
 import store from '../store';
 import {getData, postData, getPut} from '../reducers'; //импортируем actions
-import NoteElementComponent from "./NoteElementComponent";
+import NoteElementComponent from "./NoteElementComponent"; //импортируем компонент 
 class AddNoteComponent extends Component {
-    
     
     //Отработвает при загрузке страницы
     componentDidMount() {
@@ -25,10 +24,9 @@ class AddNoteComponent extends Component {
         });
     };
 
-    //Кнопка изменить запись
+    //Кнопка Изменить 
     handleUpdateNote(id, item) {
-        debugger;
-        this.props.put(id, item);
+        this.props.put(id, item); //Вызовим thunk getPut (передали в mapDispatchToProps) (который будет изменять записи в БД)
     }
 
     render() { 
@@ -45,8 +43,9 @@ class AddNoteComponent extends Component {
                     </label>
                     <button className="note__add-button" onClick={this.handleClick.bind(this)}>Добавить заметку</button>
                 </form>
-                {/*С помощью цикла map выведим все данные из БД где title и description  имя свойств*/}
+                {/*С помощью цикла map выведим все данные из БД*/}
                 {this.props.apiData.map((el,i) =>
+                    //Добавим NoteElementComponent
                     <NoteElementComponent key={i} el={el} handleUpdateNote={this.handleUpdateNote.bind(this)}/>
                 )}
             </div>
