@@ -67,7 +67,7 @@ function getNote(id, callback) {
 
 //Метод который будет обновлять данные в БД (исходя из переданного id записи)
 function updateNote(id, data, callback) {
-    return Notes.findByIdAndUpdate({'_id' : id}, data, {}, callback);
+    return Notes.findByIdAndUpdate({'_id' : id}, data, {new: true}, callback);
 }
 
 //Метод который будет удалять записи из БД

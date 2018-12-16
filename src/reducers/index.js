@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
+import * as _ from "lodash";
 import axios from 'axios'; //Axios вместо fetch для сетевого запроса
 //Actions для put запроса
-export const actionUpdateNote = (updateItem)=>{return {type: "Request_Update", payload: updateItem}};
 export const actionIsUpdating= (isUpdating)=>{return {type: "Request_Updating", payload: isUpdating}};
 //Actions для post запроса
 export const actionStartPost = (isRequestSent)=>{return {type: "Request_Sending", payload: isRequestSent}};
@@ -19,7 +19,6 @@ export const initState = {
     isFetching: false,
     fetchResult: [],
     fetchError: null,
-    updateResult: {},
     isUpdate: false    
 };
 
@@ -47,11 +46,6 @@ const mainReducer = (state = initState, action) => {
                 ...state,
                 fetchResult: action.payload
             };
-        case "Request_Update":
-            return {
-                ...state,
-                updateResult: action.payload 
-            };
         case "Request_Updating":
             return {
                 ...state,
@@ -61,7 +55,7 @@ const mainReducer = (state = initState, action) => {
             return {
                 ...state,
                 fetchError: action.payload
-            }            
+            };            
         default:
             return state;    
     }
@@ -78,7 +72,7 @@ export const postData = (post) => {
                     dispatch(actionEndPost(true));
                     let arr = (getState()).mainReducer.fetchResult; //Разобрать ?
                     arr.push(result.data);
-                    dispatch(fetchResult(arr));
+                    dispatch(fetchResult([...arr]));
                 } else {
                     dispatch(actionEndPost(false));
                 }
@@ -107,15 +101,32 @@ export const getData = () => {
 
 //Thunk компонент getPut для изменения записей в БД
 export const getPut = (id, item) => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch(actionIsUpdating(true));
         var api = axios.create({
             baseURL: 'http://localhost:3012' //адрес по которому доступна БД
         });
         return api.put(`/notes/${id}`, item).then(response => {
-            dispatch(actionUpdateNote(item));
+            const noteList = (getState()).mainReducer.fetchResult;
+            const index= _.findIndex(noteList,{_id: id});
+            let updatedItem = {...response.data};
+            noteList.splice(index, 1, updatedItem);
+            dispatch(fetchResult([...noteList]));
             dispatch(actionIsUpdating(false));
         }, err=> (dispatch(actionIsUpdating(false))));
+    }
+}
+
+export const deleteData = (id) => {
+    return (dispatch, getState) => {
+        var api = axios.create({
+            baseURL: 'http://localhost:3012'
+        });
+        return api.delete(`/notes/${id}`).then(response => {
+            const noteList = (getState()).mainReducer.fetchResult;
+            _.remove(noteList, {_id: id});
+            dispatch(fetchResult([...noteList]));
+        })
     }
 }
 

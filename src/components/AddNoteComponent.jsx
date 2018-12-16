@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom'; //Для роутинга
 import { connect } from 'react-redux'; //connect нужен для связи компонента со store
 import store from '../store';
-import {getData, postData, getPut} from '../reducers'; //импортируем actions
+import {getData, postData, getPut, deleteData} from '../reducers'; //импортируем actions
 import NoteElementComponent from "./NoteElementComponent"; //импортируем компонент 
 class AddNoteComponent extends Component {
     
@@ -46,7 +46,7 @@ class AddNoteComponent extends Component {
                 {/*С помощью цикла map выведим все данные из БД*/}
                 {this.props.apiData.map((el,i) =>
                     //Добавим NoteElementComponent
-                    <NoteElementComponent key={i} el={el} handleUpdateNote={this.handleUpdateNote.bind(this)}/>
+                    <NoteElementComponent key={i} el={el} handleUpdateNote={this.handleUpdateNote.bind(this)} handleDeleteNote={this.props.delete.bind(this)}/>
                 )}
             </div>
         ) 
@@ -64,7 +64,8 @@ const mapStateToProps = (state,ownProps={}) => ({
 const mapDispatchToProps = {
     post: postData, //thunk postData - для записи данных в БД
     get: getData, //thunk getData - для получения данных из БД
-    put: getPut //thunk getPut - для изменения данных из БД
+    put: getPut, //thunk getPut - для изменения данных из БД
+    delete: deleteData
 }
 
 //Обвернем данный компонент в connect для свзяи с хранилищем

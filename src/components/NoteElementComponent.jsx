@@ -11,6 +11,15 @@ export default class NoteElementComponent extends React.Component {
         };
         //Вызовим событие handleUpdateNote - которое вызовит thunk getPut (который записан в свойство put в mapDispatchToProps)
         this.sendUpdateToRedux = this.props.handleUpdateNote;
+        this.sendDelete = this.props.handleDeleteNote;
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.el.title !== this.props.el.title || nextProps.el.description !== this.props.el.description) {
+            this.setState({
+                title: nextProps.el.title,
+                description: nextProps.el.description
+            });
+        }
     }
     render(){
         return <div key={this.props.el._id}>
@@ -18,6 +27,7 @@ export default class NoteElementComponent extends React.Component {
                 <p>{this.props.el.description}</p>
                 {/*При клике на кнопку вызовим событие handleUpdateNote которое вызовит thunk getPut*/}
                 <button onClick={()=>(this.handleUpdateNote(this.props.el._id))}>Изменить</button>
+                <button onClick={()=>(this.handleDelete)(this.props.el._id)}>Удалить к хуям собачьим</button>
                 <div>
                     <input className="inpChangeTitle" type="text" value={this.state.title} onChange={(change)=>(this.handleOnChangeTitle(change))}/>
                     <input className="inpChangeDescription" type="text" value={this.state.description} onChange={(change)=>(this.handleOnChangeDescription(change))}/>
@@ -44,5 +54,9 @@ export default class NoteElementComponent extends React.Component {
     //Событие кнопки Изменить
     handleUpdateNote(id){
         this.sendUpdateToRedux(id, {...this.state});
+    }
+
+    handleDelete(id){
+        this.sendDelete(id);
     }
 }
