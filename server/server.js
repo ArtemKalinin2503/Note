@@ -27,7 +27,8 @@ const Schema = mongoose.Schema;
 //Опишем схему данных
 const NoteSchema = new Schema({
     title: {type: String},
-    description: {type: String}
+    description: {type: String},
+    date: {type: String}
 });
 
 //Создадим модель данных и передадим туда схему
@@ -55,7 +56,8 @@ function listNotes() {
 function createNote(data) {
     const note = new Notes({
         title: data.title,
-        description: data.description
+        description: data.description,
+        date: data.date
     });
     return note.save();
 };

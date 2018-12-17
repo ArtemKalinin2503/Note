@@ -16,11 +16,13 @@ class AddNoteComponent extends Component {
         e.preventDefault();
         let inpTitleValue = this.refs.inputTitleNote.value;
         let inpDescriptionValue = this.refs.inputDescriptionNote.value;
+        let inputDataNote = this.refs.inputDataNote.value;
         //Вызовим компонент thunk 'post' (передали в mapDispatchToProps)
         //Запишем в указанные состояния значения input (метод post описали в server.js где описали что при вызове запроса post будет отрабатывать метод createNote, в которой мы описали какие состояния принимает данный метод)
         this.props.post({
             title: inpTitleValue, 
-            description: inpDescriptionValue
+            description: inpDescriptionValue,
+            date: inputDataNote
         });
     };
 
@@ -34,14 +36,18 @@ class AddNoteComponent extends Component {
             <div className="wrapper-note__component">
                 <form className="note__form">
                     <label>
-                        <p>Название заметки</p>
+                        <p>Мастер:</p>
                         <input type="text" className="note__title" ref="inputTitleNote"/>
                     </label>
                     <label>
-                        <p>Описание заметки</p>
+                        <p>Описание услуги:</p>
                         <textarea className="note__description" ref="inputDescriptionNote"></textarea>
                     </label>
-                    <button className="note__add-button" onClick={this.handleClick.bind(this)}>Добавить заметку</button>
+                    <label>
+                        <p>Дата записи на услугу:</p>
+                        <input type="date" className="note__date" ref="inputDataNote"/>
+                    </label>
+                    <button className="note__add-button" onClick={this.handleClick.bind(this)}>Добавить запись</button>
                 </form>
                 {/*С помощью цикла map выведим все данные из БД*/}
                 {this.props.apiData.map((el,i) =>
@@ -65,7 +71,7 @@ const mapDispatchToProps = {
     post: postData, //thunk postData - для записи данных в БД
     get: getData, //thunk getData - для получения данных из БД
     put: getPut, //thunk getPut - для изменения данных из БД
-    delete: deleteData
+    delete: deleteData //thunk deleteData - для удаления данных из БД
 }
 
 //Обвернем данный компонент в connect для свзяи с хранилищем

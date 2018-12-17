@@ -7,37 +7,32 @@ export default class NoteElementComponent extends React.Component {
         super(props);
         this.state = {
             title: props.el.title,
-            description: props.el.description
+            description: props.el.description,
+            date: props.el.date
         };
         //Вызовим событие handleUpdateNote - которое вызовит thunk getPut (который записан в свойство put в mapDispatchToProps)
         this.sendUpdateToRedux = this.props.handleUpdateNote;
         this.sendDelete = this.props.handleDeleteNote;
     }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.el.title !== this.props.el.title || nextProps.el.description !== this.props.el.description) {
-            this.setState({
-                title: nextProps.el.title,
-                description: nextProps.el.description
-            });
-        }
-    }
-
     render(){
         return <div key={this.props.el._id}>
+                    {/*Вывод всех данных из БД*/}
                     <p>{this.props.el.title}:</p> 
                     <p>{this.props.el.description}</p>
+                    <p>{this.props.el.date}</p>
                     {/*При клике на кнопку вызовим событие handleUpdateNote которое вызовит thunk getPut*/}
                     <button onClick={()=>(this.handleUpdateNote(this.props.el._id))}>Изменить</button>
                     <button onClick={()=>(this.handleDelete)(this.props.el._id)}>Удалить</button>
-                    <div>
+                    <div className="modalChangeNote">
                         <input className="inpChangeTitle" type="text" value={this.state.title} onChange={(change)=>(this.handleOnChangeTitle(change))}/>
-                        <input className="inpChangeDescription" type="text" value={this.state.description} onChange={(change)=>(this.handleOnChangeDescription(change))}/>
+                        <textarea className="inpChangeDescription" value={this.state.description} onChange={(change)=>(this.handleOnChangeDescription(change))}></textarea>
+                        <input className="inpChangeDate" type="date" value={this.state.date} onChange={(change)=>(this.handleOnChangeDate(change))}/>
                     </div>
                 </div>;
     }
 
-    //Событие ввода данных input title
+    //Событие ввода новых данных input title
     handleOnChangeTitle(change){
         this.setState({
             ...this.state,
@@ -45,11 +40,19 @@ export default class NoteElementComponent extends React.Component {
         });
     }
 
-    //Событие ввода данных input description
+    //Событие ввода новых данных input description
     handleOnChangeDescription(change){
         this.setState({
             ...this.state,
             description: change.currentTarget.value
+        });
+    }
+
+     //Событие ввода новых данных input date
+     handleOnChangeDate(change){
+        this.setState({
+            ...this.state,
+            date: change.currentTarget.value
         });
     }
     
