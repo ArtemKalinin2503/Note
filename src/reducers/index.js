@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import * as _ from "lodash";
 import axios from 'axios'; //Axios вместо fetch для сетевого запроса
-//Actions для put запроса
+//Action для put запроса
 export const actionIsUpdating= (isUpdating)=>{return {type: "Request_Updating", payload: isUpdating}};
 //Actions для post запроса
 export const actionStartPost = (isRequestSent)=>{return {type: "Request_Sending", payload: isRequestSent}};
@@ -117,6 +117,7 @@ export const getPut = (id, item) => {
     }
 }
 
+//Thunk компонент deleteData для удаления записей из БД
 export const deleteData = (id) => {
     return (dispatch, getState) => {
         var api = axios.create({

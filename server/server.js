@@ -104,7 +104,7 @@ app.put('/notes/:id', function(req, res){
 
 //Запрос Delete будет удалять данные из БД
 app.delete('/notes/:id', (req, res) => {
-    //Вызовим звпрос deleteNote
+    //Вызовим метод deleteNote
     deleteNote(req.params.id).then(data => res.send(data));
 });
 

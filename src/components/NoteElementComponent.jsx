@@ -13,6 +13,7 @@ export default class NoteElementComponent extends React.Component {
         this.sendUpdateToRedux = this.props.handleUpdateNote;
         this.sendDelete = this.props.handleDeleteNote;
     }
+
     componentWillReceiveProps(nextProps){
         if(nextProps.el.title !== this.props.el.title || nextProps.el.description !== this.props.el.description) {
             this.setState({
@@ -21,18 +22,19 @@ export default class NoteElementComponent extends React.Component {
             });
         }
     }
+
     render(){
         return <div key={this.props.el._id}>
-                <p>{this.props.el.title}:</p> 
-                <p>{this.props.el.description}</p>
-                {/*При клике на кнопку вызовим событие handleUpdateNote которое вызовит thunk getPut*/}
-                <button onClick={()=>(this.handleUpdateNote(this.props.el._id))}>Изменить</button>
-                <button onClick={()=>(this.handleDelete)(this.props.el._id)}>Удалить к хуям собачьим</button>
-                <div>
-                    <input className="inpChangeTitle" type="text" value={this.state.title} onChange={(change)=>(this.handleOnChangeTitle(change))}/>
-                    <input className="inpChangeDescription" type="text" value={this.state.description} onChange={(change)=>(this.handleOnChangeDescription(change))}/>
-                </div>
-            </div>;
+                    <p>{this.props.el.title}:</p> 
+                    <p>{this.props.el.description}</p>
+                    {/*При клике на кнопку вызовим событие handleUpdateNote которое вызовит thunk getPut*/}
+                    <button onClick={()=>(this.handleUpdateNote(this.props.el._id))}>Изменить</button>
+                    <button onClick={()=>(this.handleDelete)(this.props.el._id)}>Удалить</button>
+                    <div>
+                        <input className="inpChangeTitle" type="text" value={this.state.title} onChange={(change)=>(this.handleOnChangeTitle(change))}/>
+                        <input className="inpChangeDescription" type="text" value={this.state.description} onChange={(change)=>(this.handleOnChangeDescription(change))}/>
+                    </div>
+                </div>;
     }
 
     //Событие ввода данных input title
@@ -56,6 +58,7 @@ export default class NoteElementComponent extends React.Component {
         this.sendUpdateToRedux(id, {...this.state});
     }
 
+    //Соьытие кнопки Удалить
     handleDelete(id){
         this.sendDelete(id);
     }

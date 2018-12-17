@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom'; //Для роутинга
 import { connect } from 'react-redux'; //connect нужен для связи компонента со store
 import store from '../store';
-import {getData, postData, getPut, deleteData} from '../reducers'; //импортируем actions
+import {getData, postData, getPut, deleteData} from '../reducers'; //импортируем thunk
 import NoteElementComponent from "./NoteElementComponent"; //импортируем компонент 
 class AddNoteComponent extends Component {
     
     //Отработвает при загрузке страницы
     componentDidMount() {
-       this.props.get(); //Вызовим thunk getData (передали в mapDispatchToProps) данный компонент просто выведит все значения из БД
+       this.props.get(); //Вызовим thunk getData (передали в mapDispatchToProps) данный компонент просто получит все значения из БД
     };
 
     //Кнопка Добавить заметку
@@ -17,7 +17,7 @@ class AddNoteComponent extends Component {
         let inpTitleValue = this.refs.inputTitleNote.value;
         let inpDescriptionValue = this.refs.inputDescriptionNote.value;
         //Вызовим компонент thunk 'post' (передали в mapDispatchToProps)
-        //Запишем в указанные состояния значения input (метод post описали в server.js где описали что при вызове метода post будет отрабатывать метод createNote, в которой мы описали какие состояния принимает данный метод)
+        //Запишем в указанные состояния значения input (метод post описали в server.js где описали что при вызове запроса post будет отрабатывать метод createNote, в которой мы описали какие состояния принимает данный метод)
         this.props.post({
             title: inpTitleValue, 
             description: inpDescriptionValue
