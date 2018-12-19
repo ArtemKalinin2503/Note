@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider, connect } from 'react-redux'; //Подключаем React-Redux
-import './App.css';
 import { BrowserRouter, Link, Route, Switch } from 'react-router-dom'; //Для роутинга
 import createStore from './store'; //Подключаем хранилище
 import AddNoteComponent from './components/AddNoteComponent';
+import './App.sass';
 
 //Создадим store (хранилище)
 const store = createStore;
