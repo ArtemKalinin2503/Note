@@ -28,7 +28,8 @@ const Schema = mongoose.Schema;
 const NoteSchema = new Schema({
     title: {type: String},
     description: {type: String},
-    date: {type: String}
+    date: {type: String},
+    price: {type: Number}
 });
 
 //Создадим модель данных и передадим туда схему
@@ -57,7 +58,8 @@ function createNote(data) {
     const note = new Notes({
         title: data.title,
         description: data.description,
-        date: data.date
+        date: data.date,
+        price: data.price
     });
     return note.save();
 };

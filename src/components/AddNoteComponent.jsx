@@ -17,12 +17,14 @@ class AddNoteComponent extends Component {
         let inpTitleValue = this.refs.inputTitleNote.value;
         let inpDescriptionValue = this.refs.inputDescriptionNote.value;
         let inputDataNote = this.refs.inputDataNote.value;
+        let inpPriceNote = this.refs.inputPriceNote.value;
         //Вызовим компонент thunk 'post' (передали в mapDispatchToProps)
         //Запишем в указанные состояния значения input (метод post описали в server.js где описали что при вызове запроса post будет отрабатывать метод createNote, в которой мы описали какие состояния принимает данный метод)
         this.props.post({
             title: inpTitleValue, 
             description: inpDescriptionValue,
-            date: inputDataNote
+            date: inputDataNote,
+            price: inpPriceNote
         });
     };
 
@@ -46,6 +48,10 @@ class AddNoteComponent extends Component {
                     <label>
                         <p>Дата записи на услугу:</p>
                         <input type="date" className="note__date" ref="inputDataNote"/>
+                    </label>
+                    <label>
+                        <p>Стоимость услуги</p>
+                        <input type="number" className="note__price" ref="inputPriceNote" />
                     </label>
                     <button className="note__add-button" onClick={this.handleClick.bind(this)}>Добавить запись</button>
                 </form>

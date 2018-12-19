@@ -8,7 +8,8 @@ export default class NoteElementComponent extends React.Component {
         this.state = {
             title: props.el.title,
             description: props.el.description,
-            date: props.el.date
+            date: props.el.date,
+            price: props.el.price
         };
         //Вызовим событие handleUpdateNote - которое вызовит thunk getPut (который записан в свойство put в mapDispatchToProps)
         this.sendUpdateToRedux = this.props.handleUpdateNote;
@@ -21,6 +22,7 @@ export default class NoteElementComponent extends React.Component {
                     <p>{this.props.el.title}:</p> 
                     <p>{this.props.el.description}</p>
                     <p>{this.props.el.date}</p>
+                    <p>{this.props.el.price}</p>
                     {/*При клике на кнопку вызовим событие handleUpdateNote которое вызовит thunk getPut*/}
                     <button onClick={()=>(this.handleUpdateNote(this.props.el._id))}>Изменить</button>
                     <button onClick={()=>(this.handleDelete)(this.props.el._id)}>Удалить</button>
@@ -28,6 +30,8 @@ export default class NoteElementComponent extends React.Component {
                         <input className="inpChangeTitle" type="text" value={this.state.title} onChange={(change)=>(this.handleOnChangeTitle(change))}/>
                         <textarea className="inpChangeDescription" value={this.state.description} onChange={(change)=>(this.handleOnChangeDescription(change))}></textarea>
                         <input className="inpChangeDate" type="date" value={this.state.date} onChange={(change)=>(this.handleOnChangeDate(change))}/>
+                        <input className="inpChangePrice" type="number" value={this.state.price} onChange={(change)=>(this.handleOnChangePrice(change))}/>
+                        <textarea className="inpChangeDescription" value={this.state.description} onChange={(change)=>(this.handleOnChangeDescription(change))}></textarea>
                     </div>
                 </div>;
     }
@@ -56,6 +60,14 @@ export default class NoteElementComponent extends React.Component {
         });
     }
     
+    //Событие ввода новых данных input price
+    handleOnChangePrice(change){
+        this.setState({
+            ...this.state,
+            price: change.currentTarget.value
+        });
+    }
+
     //Событие кнопки Изменить
     handleUpdateNote(id){
         this.sendUpdateToRedux(id, {...this.state});
