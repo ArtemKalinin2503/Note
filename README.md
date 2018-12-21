@@ -9,6 +9,7 @@
    - npm start (запуск React)
    - http://localhost:3012/notes (ссылка на БД)
    - http://localhost:3000/ (ссылка на сам проект)
+   - выполнить команду sudo npm install --save-dev  --unsafe-perm node-sass если проблемы (ERROR in Cannot find module 'node-sass')
 
 Использованные технологии:
 React + Redux + Express server + MongoDB + Mongoose
